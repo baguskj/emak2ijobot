@@ -14,3 +14,9 @@ I always miss the timing for buy any promo from Tokopedia. So I use telegram bot
 
 # Screnshoot
 ![image](https://user-images.githubusercontent.com/102496249/168723283-1fb195f1-6723-42cb-a0b3-025d03fbf957.png)
+
+# Reference 
+1. Python Telegram Bot\
+   https://github.com/python-telegram-bot/python-telegram-bot
+2. Selenium\
+   https://selenium-python.readthedocs.io/
