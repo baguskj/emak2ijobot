@@ -13,7 +13,7 @@ import os
 import re
 
 config = ConfigParser()
-config.read(r'data/setting.ini')
+config.read(r'../data/setting.ini')
 
 
 
