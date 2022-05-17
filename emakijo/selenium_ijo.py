@@ -1,6 +1,6 @@
 import os
 import threading
-
+from configparser import ConfigParser
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -12,13 +12,18 @@ from glob import glob
 import os
 import re
 
+config = ConfigParser()
+config.read(r'data/setting.ini')
+
+
+
 
 def get_data_from_ijo(n_data):
     global driver
 
     data = {}
     print("Opening Browser")
-    os.environ['PATH'] += os.pathsep + "F:\\Google Drive\\My File\\Belajar Programing\\Python\\emak2ijobot\\webdriver"
+    os.environ['PATH'] += os.pathsep + config['path']['web_driver']
     driver = webdriver.Firefox()
     url = 'https://www.tokopedia.com/discovery/kejar-diskon'
     print("Opening Tokopedia Flash Sale")
@@ -141,7 +146,7 @@ def thread_loop():
 
 def get_id():
     # xxmain_path = os.path.dirname(os.path.realpath(__file__))
-    data_path = r"F:\Google Drive\My File\Belajar Programing\Python\emak2ijobot\data" #path to notepad
+    data_path = config['path']['data_setting_path'] #path to notepad
     # print(f"{main_path}\\data\\")
     file = glob(f"{data_path}\\*.txt")
     file_send = []
@@ -155,7 +160,7 @@ def get_id():
 
 
 def get_kk(id):
-    data_path = r"F:\Google Drive\My File\Belajar Programing\Python\emak2ijobot\data" #path to notepad
+    data_path = config['path']['data_setting_path'] #path to notepad
     try:
         all_list = []
         with open(f"{data_path}\\{id}.txt", 'r') as file:
@@ -216,7 +221,7 @@ def telegram_threading():
 def telegram():
 
     global emakbot
-    token = r"5340683319:AAG04A1VPxtGfy0x_3sassxbYgVDAwouPyM" #token
+    token = config['telegram']['token_id'] #token
     emakbot = telebot.TeleBot(token)
 
 
@@ -236,7 +241,7 @@ def telegram():
         emakbot.send_message(message.chat.id, msg)
 
 
-    @emakbot.message_handler(commands=['jum_data'])
+    """@emakbot.message_handler(commands=['jum_data'])
     def jum_data(message):
         global n_barang
         msg = f"Jumlah data yang akan dicari  sekarang sebanyak = {n_barang} akan dirubah menjadi yang kamu mau"
@@ -251,7 +256,7 @@ def telegram():
             print(f"barang dicari {n_barang}")
         except Exception as e:
             print(e)
-            emakbot.send_message(message.chat.id, f"Tidak bisa membaca jumlah barang")
+            emakbot.send_message(message.chat.id, f"Tidak bisa membaca jumlah barang")"""
 
 
     @emakbot.message_handler(commands=['tambah'])
@@ -259,7 +264,7 @@ def telegram():
         msg = f"Writing your item to list"
         print(f"Send Message {msg}")
         emakbot.send_message(message.chat.id, msg)
-        data_path = r"F:\Google Drive\My File\Belajar Programing\Python\emak2ijobot\data"#data path
+        data_path = config['path']['data_setting_path']#data path
         data = message.text
         new_msg_raw = data.split(" ")
         new_msg_raw.remove("/tambah")
@@ -281,7 +286,7 @@ def telegram():
             if "" in list_barang:
                 list_barang.remove("")
 
-            data_path = r"F:\Google Drive\My File\Belajar Programing\Python\emak2ijobot\data"
+            data_path = config['path']['data_setting_path']
             with open(f"{data_path}\\{message.chat.id}.txt", 'w') as file:
                 for li in list_barang:
                     file.write(f"{li}\n")
@@ -298,7 +303,7 @@ def telegram():
                     n += 1
 
         else:
-            emakbot.send_message(message.chat.id, 'Theres no item in your list')
+            emakbot.send_message(message.chat.id, 'There is no item in your list')
 
 
     @emakbot.message_handler(commands=['hapus'])
@@ -306,7 +311,7 @@ def telegram():
         msg = f"Deleting Data "
         print(f"Send Message {msg}")
         emakbot.send_message(message.chat.id, msg)
-        data_path = r"F:\Google Drive\My File\Belajar Programing\Python\emak2ijobot\data"
+        data_path = config['path']['data_setting_path']
         data = message.text
         del_msg_raw = data.split(" ")
         del_msg_raw.remove(r'/hapus')
@@ -351,7 +356,7 @@ def telegram():
 
     global n_barang, loop_thread_n, force_thread_n
 
-    n_barang = 50
+    n_barang = int(config['bot']['n_data'])
     loop_thread_n = 0
     force_thread_n = 0
 
@@ -362,12 +367,12 @@ def telegram():
 """for oi in ois:
     print(f"{oi} = {ois[oi]}")"""
 
-n_barang = 100
+n_barang = int(config['bot']['n_data'])
 loop_thread_n = 0
 force_thread_n = 0
 
 global emakbot
-token = r"5340683319:AAG04A1VPxtGfy0x_3sassxbYgVDAwouPyM" #token
+token = config['telegram']['token_id'] #token
 emakbot = telebot.TeleBot(token)
 
 
