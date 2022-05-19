@@ -10,7 +10,7 @@ import telebot
 from datetime import datetime
 from glob import glob
 import os
-import re
+from pathlib import Path
 
 config = ConfigParser()
 config.read(r'../data/setting.ini')
@@ -41,8 +41,6 @@ def get_data_from_ijo(n_data):
     time_act = act.split(" ")[0]
     print(time_act)"""
 
-    all = []
-    link_all = []
     n = 0
     while n < n_data:
         print(f"Data Program ({n}) > Data From Website ({n_data})")
@@ -50,29 +48,18 @@ def get_data_from_ijo(n_data):
         # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight-1000);")
         time.sleep(3)
-        all = driver.find_element(By.CSS_SELECTOR,
-                                  r'div.css-g90k5e:nth-child(5) > div:nth-child(1) > div:nth-child(1)')
-        list_all = all.find_elements(By.TAG_NAME, 'a')
         link_all = []
+        all = driver.find_element(By.CSS_SELECTOR,
+                                  r'#divComp\#2 > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1)')
+        list_all = all.find_elements(By.TAG_NAME, 'a')
         for li in list_all:
             url = li.get_attribute('href')
             # print(url)
             if url not in link_all:
                 link_all.append(url)
-
         n = len(link_all)
         print(f"Sum Data Afer Scrolling = {n}")
 
-    all = driver.find_element(By.CSS_SELECTOR,
-                              r'div.css-g90k5e:nth-child(5) > div:nth-child(1) > div:nth-child(1)')
-    list_all = all.find_elements(By.TAG_NAME, 'a')
-    link_all = []
-    for li in list_all:
-        url = li.get_attribute('href')
-        # print(url)
-        if url not in link_all:
-            link_all.append(url)
-    print(f"Sum Link = {len(link_all)}")
 
     for dat in range(len(list_all)):
         raw = list_all[dat].text.split('\n')
@@ -123,9 +110,9 @@ def looop():
         if int(rn) in time_check and n_kali == 0:
             n_kali = 1
             for ids in get_id():
-                emakbot.send_message(ids,"Searching For Promo")
+                emakbot.send_message(ids, "Searching For Promo")
                 force_cek(ids)
-            emakbot.send_message(ids, "Waiting....")
+                emakbot.send_message(ids, "Waiting....")
             time.sleep(1800)
         else:
             time_sekrang = datetime.now().time()
@@ -160,9 +147,9 @@ def get_id():
 
 
 def get_kk(id):
-    data_path = config['path']['data_setting_path'] #path to notepad
+    data_path = Path(config['path']['data_setting_path']) #path to notepad
+    print(data_path)
     try:
-        all_list = []
         with open(f"{data_path}\\{id}.txt", 'r') as file:
             all_list = file.read().splitlines()
             return all_list
@@ -175,6 +162,7 @@ def force_cek(ids):
         all_data_ijo = get_data_from_ijo(n_barang)
         ada=[]
         barangsay = get_kk(ids)
+        print(barangsay)
         n_match_param = 3
 
         #print(all_data_ijo)
