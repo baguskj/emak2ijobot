@@ -1,4 +1,4 @@
-# emak2ijobot
+# Tokopedia Promo Telegram Bot Notification 
 Program to automate checking Promo in Tokopedia Kejar Diskon Site. Tokopedia is one of e-commerce in Indonesia
 
 # Problems
